@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import random
+from vibe_checker import VibeChecker
 
 # --- CONFIGURATION ---
 try:
@@ -106,6 +107,7 @@ if 'movies' not in st.session_state:
 if 'current_index' not in st.session_state:
     st.session_state.current_index = 0
 
+vibe_checker = VibeChecker()
 # --- SIDEBAR UI ---
 with st.sidebar:
     st.header("🧠 Diagnostic Inputs")
@@ -156,6 +158,22 @@ else:
                 
             st.write("### Plot Summary")
             st.write(movie['overview'])
+            
+            st.markdown("---")
+
+            # --- NEW: THE SOCIAL VIBE CHECKER ---
+            st.write("### 🗣️ Audience Vibe Check")
+            if st.button("Deep Scan Reviews (AI)", key=f"scan_{movie['id']}"):
+                with st.spinner(f"Scraping Letterboxd and running Gemini Analysis for '{movie['title']}'..."):
+                    
+                    vibe_report = vibe_checker.check_vibe(movie['title'])
+                    
+                    if "error" in vibe_report:
+                        st.error(vibe_report["error"])
+                    else:
+                        st.success(f"**Primary Emotion:** {vibe_report.get('primary_emotion', 'N/A')}")
+                        st.warning(f"**Warning:** {vibe_report.get('warning', 'None')}")
+                        st.info(f"**Consensus:** {vibe_report.get('consensus', 'N/A')}")
             
             st.markdown("---")
             
