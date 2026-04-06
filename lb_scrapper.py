@@ -16,7 +16,15 @@ class Scraper():
     def scrape_review(self, movie_name):
         edited_name = movie_name.lower().replace(" ", self.space_replace).replace("'", "").replace(":", "") 
         url = f"{self.baseURL}/{edited_name}/reviews/"
-        response = self.scraper.get(url)
+        headers = {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Referer': 'https://www.google.com/',
+            'DNT': '1', # Do Not Track Request Header
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+        }
+        response = self.scraper.get(url, headers=headers)
         if response.status_code == 200:
             soup = BeautifulSoup(response.content, 'html.parser')
             reviews = soup.find_all("div", class_=self.review_class)
