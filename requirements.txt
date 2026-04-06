@@ -1,7 +1,5 @@
 streamlit
 requests
-json
 google-genai
-google-generativeai
 beautifulsoup4
 cloudscraper
