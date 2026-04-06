@@ -5,12 +5,14 @@ Moodie is a context-aware movie recommendation app built with Streamlit and the 
 ## Features ✨
 - **Smart Mapping**: Converts human feelings (Happy/Light, Sad/Emotional, etc.) into precise TMDB API queries.
 - **Context-Aware**: Adapts recommendations based on whether you're alone, on a date night, or with family/kids.
+- **Audience Vibe Check**: Uses Google Gemini AI to analyze raw reviews scraped from Letterboxd, giving you the true emotional consensus and content warnings.
 - **State Management**: Remembers your discarded movies so you can easily skip to the next recommendation without restarting your search.
 - **Interactive UI**: Clean, responsive Streamlit interface with movie posters, plot summaries, ratings, and quick action buttons.
 
 ## Prerequisites 🛠️
 - Python 3.7 or higher
 - A TMDB API Key. You can get one by creating an account at [The Movie Database](https://www.themoviedb.org/).
+- A Google Gemini API Key. You can obtain this from [Google AI Studio](https://aistudio.google.com/app/apikey).
 
 ## Installation & Setup 🚀
 
@@ -25,12 +27,13 @@ Moodie is a context-aware movie recommendation app built with Streamlit and the 
    pip install -r requirements.txt
    ```
 
-3. **Set up your API Key**:
+3. **Set up your API Keys**:
    Streamlit uses a `secrets.toml` file to manage sensitive information securely.
    - Create a directory named `.streamlit` in the root of your project.
-   - Create a file named `secrets.toml` inside the `.streamlit` directory and add your TMDB API key:
+   - Create a file named `secrets.toml` inside the `.streamlit` directory and add your APIs:
      ```toml
      TMDB_API_KEY = "your_tmdb_api_key_here"
+     GEMINI_API_KEY = "your_gemini_api_key_here"
      ```
 
 ## Running the App 🏃‍♂️
@@ -50,4 +53,5 @@ The app should automatically open in your default web browser at `http://localho
    - **Era Preference**: Any, Modern (2010+), Classic (Pre-2000).
 2. Click **Find Movies** to generate a query tailored to your current context.
 3. Review the recommended movie poster, plot, rating, and popularity.
-4. Click **I'll Watch This!** to confirm your choice, or **Seen it / Skip** to immediately view the next best recommendation without needing to reload the page.
+4. Click **Deep Scan Reviews (AI)** to trigger an Audience Vibe Check and get the genuine mood and warnings based on real world reviews.
+5. Click **I'll Watch This!** to confirm your choice, or **Seen it / Skip** to immediately view the next best recommendation without needing to reload the page.

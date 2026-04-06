@@ -1,2 +1,6 @@
 streamlit
 requests
+json
+google-genai
+beautifulsoup4
+cloudscraper
