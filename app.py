@@ -103,9 +103,12 @@ def fetch_movies(params):
         return []
 
 def search_movie_tmdb(title, year):
+    # Remove anything after and including '(' to improve TMDB search accuracy
+    clean_title = title.split('(')[0].strip()
+    
     params = {
         "api_key": API_KEY,
-        "query": title,
+        "query": clean_title,
         "language": "en-US",
         "page": 1
     }
@@ -140,8 +143,16 @@ def navigate(view_name):
     st.session_state.current_view = view_name
     st.rerun() # Forces the app to instantly reload with the new view
 
-vibe_checker = VibeChecker()
-semantic_recommender = SemanticRecommender()
+@st.cache_resource
+def get_vibe_checker():
+    return VibeChecker()
+
+@st.cache_resource
+def get_semantic_recommender():
+    return SemanticRecommender()
+
+vibe_checker = get_vibe_checker()
+semantic_recommender = get_semantic_recommender()
 
 # --- VIEW 1: THE LANDING PAGE ---
 def render_home():
