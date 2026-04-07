@@ -269,7 +269,7 @@ def render_prompt_screen():
                     st.success("Here are your movies!")
                     
                     for index, row in recommendations.iterrows():
-                        year = str(row['year']) if pd.notna(row['year']) else ""
+                        year = str(int(row['year'])) if pd.notna(row['year']) else ""
                         tmdb_movie = search_movie_tmdb(row['title'], year)
                         
                         if tmdb_movie:
@@ -291,13 +291,13 @@ def render_prompt_screen():
                                     st.markdown("`🌍 Global Hit`")
                                     
                                 st.write("### Plot Summary")
-                                st.write(tmdb_movie.get('overview', row['overview']))
+                                st.write(tmdb_movie.get('overview', row.get('plot', 'No plot available.')))
                                 
                                 st.markdown("---")
                         else:
                             # Fallback if TMDB API doesn't find it
-                            st.write(f"**{row['title']}** ({year})")
-                            st.write(row['overview'])
+                            st.write(f"**{row.get('title', 'Unknown Title')}** ({year})")
+                            st.write(row.get('plot', 'No plot available.'))
                             st.write("---")
                 except Exception as e:
                     st.error(f"Error getting recommendations: {e}")
