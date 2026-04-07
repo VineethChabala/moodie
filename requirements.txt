@@ -3,3 +3,7 @@ requests
 google-genai
 beautifulsoup4
 cloudscraper
+sentence-transformers
+pandas
+numpy
+gdown
