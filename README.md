@@ -6,6 +6,7 @@ Moodie is a context-aware movie recommendation app built with Streamlit and the 
 - **Smart Mapping**: Converts human feelings (Happy/Light, Sad/Emotional, etc.) into precise TMDB API queries.
 - **Context-Aware**: Adapts recommendations based on whether you're alone, on a date night, or with family/kids.
 - **Audience Vibe Check**: Uses Google Gemini AI to analyze raw reviews scraped from Letterboxd, giving you the true emotional consensus and content warnings.
+- **Semantic Search**: Find movies using natural language prompts (e.g., "Comedy movie with police officers") via Sentence Transformers over HuggingFace.
 - **State Management**: Remembers your discarded movies so you can easily skip to the next recommendation without restarting your search.
 - **Interactive UI**: Clean, responsive Streamlit interface with movie posters, plot summaries, ratings, and quick action buttons.
 
@@ -13,6 +14,7 @@ Moodie is a context-aware movie recommendation app built with Streamlit and the 
 - Python 3.7 or higher
 - A TMDB API Key. You can get one by creating an account at [The Movie Database](https://www.themoviedb.org/).
 - A Google Gemini API Key. You can obtain this from [Google AI Studio](https://aistudio.google.com/app/apikey).
+- A HuggingFace API Key for semantic search features. You can get one from [Hugging Face](https://huggingface.co/settings/tokens).
 
 ## Installation & Setup 🚀
 
@@ -30,10 +32,13 @@ Moodie is a context-aware movie recommendation app built with Streamlit and the 
 3. **Set up your API Keys**:
    Streamlit uses a `secrets.toml` file to manage sensitive information securely.
    - Create a directory named `.streamlit` in the root of your project.
-   - Create a file named `secrets.toml` inside the `.streamlit` directory and add your APIs:
+   - Create a file named `secrets.toml` inside the `.streamlit` directory and add your APIs and Drive IDs:
      ```toml
      TMDB_API_KEY = "your_tmdb_api_key_here"
      GEMINI_API_KEY = "your_gemini_api_key_here"
+     HUGGINGFACE_API_KEY = "your_hf_token_here"
+     CSV_DRIVE_ID = "your_csv_drive_id_here"
+     NPY_DRIVE_ID = "your_npy_drive_id_here"
      ```
 
 ## Running the App 🏃‍♂️

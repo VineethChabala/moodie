@@ -26,14 +26,14 @@ class SemanticRecommender():
         # The ID is the long string of letters and numbers between /d/ and /view
         
         if not os.path.exists(csv_file):
-            st.info(f"Downloading {csv_file} from Google Drive...")
+            print(f"Downloading {csv_file} from Google Drive...")
             try:
                 gdown.download(id=csv_drive_id, output=csv_file, quiet=False)
             except Exception as e:
                 st.error(f"Failed to download CSV: {e}")
                 
         if not os.path.exists(npy_file):
-            st.info(f"Downloading {npy_file} from Google Drive...")
+            print(f"Downloading {npy_file} from Google Drive...")
             try:
                 gdown.download(id=npy_drive_id, output=npy_file, quiet=False)
             except Exception as e:
