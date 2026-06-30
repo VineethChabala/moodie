@@ -1,4 +1,7 @@
 *.pyc
 *.csv
 *.npy
-*.txt
+*.id
+.streamlit/
+secrets.toml
+.env

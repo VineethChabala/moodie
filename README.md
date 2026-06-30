@@ -1,62 +1,81 @@
 # Moodie AI 🍿
 
-Moodie is a context-aware movie recommendation app built with Streamlit and the TMDB (The Movie Database) API. It goes beyond simple genre filtering by understanding your current mood, energy level, who you're watching with, and your era preferences to suggest the perfect movie.
+Moodie AI is a highly interactive, context-aware movie recommendation dashboard built with **Streamlit**, powered by **TMDB (The Movie Database)**, and supercharged with **Hugging Face Sentence Transformers** and **Google Gemini AI**. 
 
-## Features ✨
-- **Smart Mapping**: Converts human feelings (Happy/Light, Sad/Emotional, etc.) into precise TMDB API queries.
-- **Context-Aware**: Adapts recommendations based on whether you're alone, on a date night, or with family/kids.
-- **Audience Vibe Check**: Uses Google Gemini AI to analyze raw reviews scraped from Letterboxd, giving you the true emotional consensus and content warnings.
-- **Semantic Search**: Find movies using natural language prompts (e.g., "Comedy movie with police officers") via Sentence Transformers over HuggingFace.
-- **State Management**: Remembers your discarded movies so you can easily skip to the next recommendation without restarting your search.
-- **Interactive UI**: Clean, responsive Streamlit interface with movie posters, plot summaries, ratings, and quick action buttons.
+Unlike standard genre search tools, Moodie AI deciphers your immediate feelings, social context, and energy levels to recommend the perfect movie, or performs semantic search over hundreds of thousands of movie plots.
 
-## Prerequisites 🛠️
-- Python 3.7 or higher
-- A TMDB API Key. You can get one by creating an account at [The Movie Database](https://www.themoviedb.org/).
-- A Google Gemini API Key. You can obtain this from [Google AI Studio](https://aistudio.google.com/app/apikey).
-- A HuggingFace API Key for semantic search features. You can get one from [Hugging Face](https://huggingface.co/settings/tokens).
+---
 
-## Installation & Setup 🚀
+## 🏗️ Project Architecture & File Directory
 
-1. **Clone the repository** (or download the files):
-   ```bash
-   git clone <repository-url>
-   cd moodie
-   ```
+The project is structured as follows:
 
-2. **Install the required dependencies**:
+* **[`app.py`](app.py)**: The main Streamlit entry point. Contains the state router, navigation views (Landing page, Knobs screen, and Semantic Prompt screen), query builders, and integration endpoints.
+* **[`sematic_recommender.py`](sematic_recommender.py)**: Implements semantic search using `SentenceTransformer('all-MiniLM-L6-v2')`. Dynamically fetches large CSV datasets and embedding vectors from Google Drive if they are not cached locally.
+* **[`vibe_checker.py`](vibe_checker.py)**: The audience vibe validator. Uses `gemini-2.5-flash` to read scraped user reviews and extract structured JSON (primary emotion, content warnings, and emotional consensus).
+* **[`lb_scrapper.py`](lb_scrapper.py)**: A BeautifulSoup-based Letterboxd reviews parser designed to bypass common bot checks using `cloudscraper`.
+* **[`driveids.id`](driveids.id)**: Tracks ID variants (CSV & NPY versions) on Google Drive for easy download configuration.
+
+---
+
+## ✨ Key Features
+
+### 🎛️ 1. Context-Aware Diagnostic Knobs
+Input your context through the sidebar controls:
+* **How are you feeling?**: (Happy/Light, Sad/Emotional, Tense/Angry, Curious/Bored).
+* **Energy Level**: (Low/Chill, Medium/Engaging, High/Adrenaline). Adjusts target review counts and popularity priority.
+* **Who's watching?**: (Just Me, Date Night, Family/Kids). Automatically adjusts age certifications (e.g. PG limits for kids) and pushes romance/comedy weights.
+* **Era Preference**: (Any, Modern 2010+, Classic Pre-2000).
+
+### ✍️ 2. Natural Language Semantic Search
+Simply type how you feel or describe a plot (e.g. *"dark space exploration with robots"*). Using `all-MiniLM-L6-v2` dense vector matching over our database, Moodie AI will instantly identify and return the top 10 matching films.
+
+### 🗣️ 3. Audience Vibe Check (Gemini AI)
+By parsing user reviews directly from Letterboxd, the integrated Film Psychologist (powered by Gemini Flash) reads between the lines to deliver:
+* **True Emotional Consensus** (e.g., *"Stressful"*, *"Comforting"*)
+* **Content Warnings** (flags potential triggers or unexpected themes)
+* **General Vibe Summary** (capsules audience response in 1-2 sentences)
+
+### 💾 4. Smart Session State Management
+Never see the same movie twice. Moodie AI remembers your discarded or already-seen recommendations during a session, allowing you to skip to the next choice instantly without reloading.
+
+---
+
+## 🛠️ Prerequisites & API Configurations
+
+Ensure you have the following API keys ready:
+1. **TMDB API Key**: Available under API Settings on [The Movie Database](https://www.themoviedb.org/).
+2. **Google Gemini API Key**: Obtainable from [Google AI Studio](https://aistudio.google.com/app/apikey).
+3. **Hugging Face Token**: Available in settings on [Hugging Face](https://huggingface.co/settings/tokens).
+
+### Streamlit Secrets Configuration
+
+Create a folder named `.streamlit` in the root of the project, and inside it create a `secrets.toml` file containing your credentials:
+
+```toml
+TMDB_API_KEY = "your_tmdb_api_key_here"
+GEMINI_API_KEY = "your_gemini_api_key_here"
+HUGGINGFACE_API_KEY = "your_hf_token_here"
+CSV_DRIVE_ID = "your_csv_drive_id_here"
+NPY_DRIVE_ID = "your_npy_drive_id_here"
+```
+
+> [!TIP]
+> You can retrieve the Google Drive File IDs from the **[`driveids.id`](driveids.id)** file, which lists IDs for different database sizes/versions.
+
+---
+
+## 🚀 Installation & Setup
+
+1. **Install Python Dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Set up your API Keys**:
-   Streamlit uses a `secrets.toml` file to manage sensitive information securely.
-   - Create a directory named `.streamlit` in the root of your project.
-   - Create a file named `secrets.toml` inside the `.streamlit` directory and add your APIs and Drive IDs:
-     ```toml
-     TMDB_API_KEY = "your_tmdb_api_key_here"
-     GEMINI_API_KEY = "your_gemini_api_key_here"
-     HUGGINGFACE_API_KEY = "your_hf_token_here"
-     CSV_DRIVE_ID = "your_csv_drive_id_here"
-     NPY_DRIVE_ID = "your_npy_drive_id_here"
-     ```
+2. **Run the Streamlit App**:
+   ```bash
+   streamlit run app.py
+   ```
 
-## Running the App 🏃‍♂️
-
-Start the Streamlit development server:
-```bash
-streamlit run app.py
-```
-
-The app should automatically open in your default web browser at `http://localhost:8501`.
-
-## Usage 💡
-1. Open the sidebar and adjust your **Diagnostic Inputs**:
-   - **How are you feeling?**: Happy/Light, Sad/Emotional, Tense/Angry, Curious/Bored.
-   - **Energy Level**: Low (Chill), Medium (Engaging), High (Adrenaline).
-   - **Who's watching?**: Just Me, Date Night, Family/Kids.
-   - **Era Preference**: Any, Modern (2010+), Classic (Pre-2000).
-2. Click **Find Movies** to generate a query tailored to your current context.
-3. Review the recommended movie poster, plot, rating, and popularity.
-4. Click **Deep Scan Reviews (AI)** to trigger an Audience Vibe Check and get the genuine mood and warnings based on real world reviews.
-5. Click **I'll Watch This!** to confirm your choice, or **Seen it / Skip** to immediately view the next best recommendation without needing to reload the page.
+3. **Browse local application**:
+   Open `http://localhost:8501` in your browser.
